@@ -1,60 +1,91 @@
 return {
-  "goolord/alpha-nvim",
-  event = "VimEnter",
-  enabled = true,
-  opts = function()
-    local dashboard = require("alpha.themes.dashboard")
 
-    local logo = [[
-     █████╗ ███████╗██╗  ██╗██╗   ██╗██╗███╗   ███╗
-    ██╔══██╗██╔════╝██║  ██║██║   ██║██║████╗ ████║
-    ███████║███████╗███████║██║   ██║██║██╔████╔██║
-    ██╔══██║╚════██║██╔══██║╚██╗ ██╔╝██║██║╚██╔╝██║
-    ██║  ██║███████║██║  ██║ ╚████╔╝ ██║██║ ╚═╝ ██║
-    ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚═╝╚═╝     ╚═╝
-    ]]
+  -- =========================
+  -- DASHBOARD (ASHVIM)
+  -- =========================
+  {
+    "goolord/alpha-nvim",
+    event = "VimEnter",
+    config = function()
+      local alpha = require("alpha")
+      local dashboard = require("alpha.themes.dashboard")
 
-    dashboard.section.header.val = vim.split(logo, "\n")
+      dashboard.section.header.val = {
+        " ",
+        "   █████╗ ███████╗██╗  ██╗██╗   ██╗██╗███╗   ███╗",
+        "  ██╔══██╗██╔════╝██║  ██║██║   ██║██║████╗ ████║",
+        "  ███████║███████╗███████║██║   ██║██║██╔████╔██║",
+        "  ██╔══██║╚════██║██╔══██║╚██╗ ██╔╝██║██║╚██╔╝██║",
+        "  ██║  ██║███████║██║  ██║ ╚████╔╝ ██║██║ ╚═╝ ██║",
+        "  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚═╝╚═╝     ╚═╝",
+        " ",
+      }
 
-    dashboard.section.buttons.val = {
-      dashboard.button("f", "  Find File", "<cmd>lua LazyVim.pick()()<cr>"),
-      dashboard.button("n", "  New File", "<cmd>ene | startinsert<cr>"),
-      dashboard.button("r", "  Recent Files", "<cmd>lua LazyVim.pick('oldfiles')()<cr>"),
-      dashboard.button("g", "  Find Text", "<cmd>lua LazyVim.pick('live_grep')()<cr>"),
-      dashboard.button("c", "  Config", "<cmd>lua LazyVim.pick.config_files()()<cr>"),
-      dashboard.button("s", "  Restore Session", "<cmd>lua require('persistence').load()<cr>"),
-      dashboard.button("l", "󰒲  Lazy", "<cmd>Lazy<cr>"),
-      dashboard.button("q", "  Quit", "<cmd>qa<cr>"),
-    }
+      dashboard.section.buttons.val = {
+        dashboard.button("e", "󰈔  New file", "<cmd>ene | startinsert<CR>"),
+        dashboard.button("f", "󰱼  Find files", "<cmd>Telescope find_files<CR>"),
+        dashboard.button("t", "󱔗  Todo", "<cmd>TodoTelescope<CR>"),
+        dashboard.button("p", "󰉋  Projects", "<cmd>Telescope projects<CR>"),
+        dashboard.button("g", "󰊢  Lazygit", "<cmd>LazyGit<CR>"),
+        dashboard.button("q", "󰅚  Quit", "<cmd>qa<CR>"),
+      }
 
-    for _, button in ipairs(dashboard.section.buttons.val) do
-      button.opts.hl = "AlphaButtons"
-      button.opts.hl_shortcut = "AlphaShortcut"
-    end
+      dashboard.section.footer.val = {}
 
-    dashboard.section.header.opts.hl = "AlphaHeader"
-    dashboard.section.buttons.opts.hl = "AlphaButtons"
-    dashboard.section.footer.opts.hl = "AlphaFooter"
+      dashboard.opts.layout = {
+        { type = "padding", val = 2 },
+        dashboard.section.header,
+        { type = "padding", val = 2 },
+        dashboard.section.buttons,
+      }
 
-    dashboard.opts.layout[1].val = 8
-    dashboard.opts.noautocmd = true
+      dashboard.section.header.opts.hl = "AlphaHeader"
+      dashboard.section.buttons.opts.hl = "AlphaButtons"
 
-    return dashboard
-  end,
+      alpha.setup(dashboard.opts)
+    end,
+  },
 
-  config = function(_, dashboard)
-    -- Close Lazy UI if open
-    if vim.o.filetype == "lazy" then
-      vim.cmd.close()
-      vim.api.nvim_create_autocmd("User", {
-        once = true,
-        pattern = "AlphaReady",
-        callback = function()
-          require("lazy").show()
-        end,
-      })
-    end
+  -- =========================
+  -- TELESCOPE
+  -- =========================
+  {
+    "nvim-telescope/telescope.nvim",
+    cmd = { "Telescope" },
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("telescope").setup({})
+    end,
+  },
 
-    require("alpha").setup(dashboard.opts)
-  end,
+  -- =========================
+  -- TODO COMMENTS
+  -- =========================
+  {
+    "folke/todo-comments.nvim",
+    cmd = { "TodoTelescope", "TodoQuickFix" },
+    dependencies = { "nvim-lua/plenary.nvim" },
+    opts = {},
+  },
+
+  -- =========================
+  -- PROJECTS
+  -- =========================
+  {
+    "ahmedkhalf/project.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("project_nvim").setup({})
+      require("telescope").load_extension("projects")
+    end,
+  },
+
+  -- =========================
+  -- LAZYGIT
+  -- =========================
+  {
+    "kdheepak/lazygit.nvim",
+    cmd = { "LazyGit" },
+    dependencies = { "nvim-lua/plenary.nvim" },
+  },
 }
