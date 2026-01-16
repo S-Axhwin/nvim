@@ -14,10 +14,15 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+vim.g.showtabline = 0
+
+vim.g.lazyvim_picker = "telescope" -- 🔥 THIS KILLS snacks_picker
 require("lazy").setup({
   spec = {
     -- add LazyVim and import its plugins
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+
+    { "lazyvim.plugins.extras.editor.snacks_picker", enabled = false },
     -- import/override with your plugins
     { import = "plugins" },
   },
