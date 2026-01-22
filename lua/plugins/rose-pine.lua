@@ -7,4 +7,13 @@ return {
       vim.cmd("colorscheme rose-pine")
     end,
   },
+  {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 300,
+  },
+  {
+    "ellisonleao/gruvbox.nvim",
+    priority = 1000,
+  },
 }
