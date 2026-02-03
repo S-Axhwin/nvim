@@ -32,6 +32,16 @@ vim.keymap.set("n", "<Down>", "<Nop>", opts)
 vim.keymap.set("n", "<Left>", "<Nop>", opts)
 vim.keymap.set("n", "<Right>", "<Nop>", opts)
 
+-- Navigate buffers with Ctrl-h / Ctrl-l
+vim.api.nvim_set_keymap("n", "<C-h>", ":bprevious<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<C-l>", ":bnext<CR>", { noremap = true, silent = true })
+
+-- Move between splits using Shift+H/L/J/K
+vim.api.nvim_set_keymap("n", "H", "<C-w>h", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "L", "<C-w>l", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "J", "<C-w>j", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "K", "<C-w>k", { noremap = true, silent = true })
+
 -- Insert mode
 vim.keymap.set("i", "<Up>", "<Nop>", opts)
 vim.keymap.set("i", "<Down>", "<Nop>", opts)
